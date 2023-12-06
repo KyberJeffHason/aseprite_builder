@@ -11,6 +11,7 @@ on:
 
 env:
   BUILD_TYPE: Release
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
   
 jobs:
   check-version:
@@ -61,6 +62,8 @@ jobs:
   build-aseprite:
     name: Build Aseprite
     needs: check-version
+    env: 
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     if: ${{ needs.check-version.outputs.should_build }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -71,9 +74,13 @@ jobs:
       - name: (Windows) Install dependencies
         if: matrix.os == 'windows-latest'
         uses: seanmiddleditch/gha-setup-ninja@v1
+        env:
+         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       - name: (Ubuntu) Install dependencies
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt install -y cmake ninja-build libxcursor-dev libxi-dev libgl1-mesa-dev
+        env:
+         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       - name: (macOS) Install dependencies
         if: matrix.os == 'macOS-latest'
         run: brew install ninja p7zip
